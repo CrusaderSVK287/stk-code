@@ -700,52 +700,41 @@ void RaceGUI::drawGlobalMiniMap()
         bool has_teams = (ctf_world || soccer_world);
         
         // Highlight the player icons with some background image.
-        if ((has_teams || is_local) && m_icons_frame != NULL)
-        {
-            video::SColor color = kart->getKartProperties()->getColor();
+        video::SColor color = kart->getKartProperties()->getColor();
             
-            if (has_teams)
-            {
-                KartTeam team = world->getKartTeam(kart->getWorldKartId());
+        if (has_teams)
+        {
+            KartTeam team = world->getKartTeam(kart->getWorldKartId());
                 
-                if (team == KART_TEAM_RED)
-                {
-                    color = video::SColor(255, 200, 0, 0);
-                }
-                else if (team == KART_TEAM_BLUE)
-                {
-                    color = video::SColor(255, 0, 0, 200);
-                }
+            if (team == KART_TEAM_RED)
+            {
+                color = video::SColor(255, 200, 0, 0);
             }
+            else if (team == KART_TEAM_BLUE)
+            {
+                color = video::SColor(255, 0, 0, 200);
+            }
+        }
                                   
-            video::SColor colors[4] = {color, color, color, color};
+        const core::rect<s32> rect(core::position2d<s32>(0,0),
+                                    m_icons_frame->getSize());
 
-            const core::rect<s32> rect(core::position2d<s32>(0,0),
-                                        m_icons_frame->getSize());
-
-            // show kart direction in soccer
-            if (soccer_world)
-            {
-                // Find the direction a kart is moving in
-                btTransform trans = kart->getTrans();
-                Vec3 direction(trans.getBasis().getColumn(2));
-                // Get the rotation to rotate the icon frame
-                float rotation = atan2f(direction.getZ(),direction.getX());
-                if (track->getMinimapInvert())
-                {   // correct the direction due to invert minimap for blue
-                    rotation = rotation + M_PI;
-                }
-                rotation = -1.0f * rotation + 0.25f * M_PI; // icons-frame_arrow.png was rotated by 45 degrees
-                draw2DImageRotationColor(m_icons_frame, position, rect, NULL, rotation, color);
-            }
-            else
-            {
-                draw2DImage(m_icons_frame, position, rect, NULL, colors, true);
-            }
-        }   // if isPlayerController
-
-        draw2DImage(icon, position, source, NULL, NULL, true);
-
+        // Find the direction a kart is moving in
+        btTransform trans = kart->getTrans();
+        Vec3 direction(trans.getBasis().getColumn(2));
+        // Get the rotation to rotate the icon frame
+        float rotation = atan2f(direction.getZ(),direction.getX());
+        if (track->getMinimapInvert())
+        {   // correct the direction due to invert minimap for blue
+            rotation = rotation + M_PI;
+        }
+        rotation = -1.0f * rotation + 0.25f * M_PI; // icons-frame_arrow.png was rotated by 45 degrees
+        
+        draw2DImageRotationColor(m_icons_frame, position, rect, NULL, rotation, color);
+        
+        float rotation_icon = rotation + M_PI / 4;
+        const video::SColor white(255, 255, 255, 255);
+        draw2DImageRotationColor(icon, position, source, NULL, rotation_icon, white);
     }   // for i<getNumKarts
 
     // Draw the basket-ball icons on the minimap

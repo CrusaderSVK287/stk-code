@@ -253,6 +253,9 @@ protected:
     /** Reset position. */
     btTransform  m_reset_transform;
 
+    bool b_played_custom_skid_sound_level_1 = false;
+    bool b_played_custom_skid_sound_level_2 = false;
+
     std::vector<SFXBase*> m_custom_sounds;
     int m_emitter_id = 0;
     static const int EMITTER_COUNT = 3;
@@ -599,6 +602,11 @@ public:
      *  indicating that this kart has really finished the race. */
     int getNetworkConfirmedFinishTicks() const OVERRIDE
                                    { return m_network_confirmed_finish_ticks; }
+
+    bool get_played_custom_skid_sound_level_1() {return b_played_custom_skid_sound_level_1;}
+    bool get_played_custom_skid_sound_level_2() {return b_played_custom_skid_sound_level_2;}
+    void set_played_custom_skid_sound_level_1(bool b) {b_played_custom_skid_sound_level_1 = b;}
+    void set_played_custom_skid_sound_level_2(bool b) {b_played_custom_skid_sound_level_2 = b;}
 
 };   // Kart
 

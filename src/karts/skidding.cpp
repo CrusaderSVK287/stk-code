@@ -22,6 +22,7 @@
 #  include "graphics/show_curve.hpp"
 #endif
 #include "achievements/achievements_status.hpp"
+#include "audio/sfx_base.hpp"
 #include "config/player_manager.hpp"
 #include "karts/kart.hpp"
 #include "karts/kart_gfx.hpp"
@@ -65,6 +66,7 @@ Skidding::~Skidding()
 // ----------------------------------------------------------------------------
 /** Resets all skidding related values.
  */
+
 void Skidding::reset()
 {
     m_skid_time           = 0;
@@ -261,6 +263,7 @@ float Skidding::getSteeringWhenSkidding(float steering) const
  *  \param dt Time step size.
  *  \return Current height of the jump.
  */
+
 float Skidding::updateGraphics(float dt)
 {
     m_kart->getKartGFX()->setCreationRateAbsolute(KartGFX::KGFX_SKIDL, 0);
@@ -269,6 +272,20 @@ float Skidding::updateGraphics(float dt)
 
     float bonus_time, bonus_speed, bonus_force;
     unsigned int level = getSkidBonus(&bonus_time, &bonus_speed, &bonus_force);
+
+    if (m_kart->m_skid_sound &&
+        m_kart->m_skid_sound->getStatus() == SFXBase::SFX_PLAYING)
+    {
+        float pitch = 1.0f;
+        if (level >= 2)
+            pitch = 1.25f;
+        else if (level == 1)
+            pitch = 1.15f;
+
+        m_kart->m_skid_sound->setSpeed(pitch);
+    }
+
+
     if (m_kart->m_max_speed
         ->isSpeedIncreaseActive(MaxSpeed::MS_INCREASE_SKIDDING) &&
         m_skid_bonus_end_ticks > World::getWorld()->getTicksSinceStart())
@@ -280,6 +297,16 @@ float Skidding::updateGraphics(float dt)
         m_skid_bonus_end_ticks > World::getWorld()->getTicksSinceStart())
     {
         level = 2;
+    }
+
+    // Play custom sound for skid bonus idk lol
+    if (level == 1 && !m_kart->get_played_custom_skid_sound_level_1()) {
+        Log::info("Skidding", "Reached level 1.");
+        m_kart->set_played_custom_skid_sound_level_1(true);
+    }
+    if (level == 2 && !m_kart->get_played_custom_skid_sound_level_2()) {
+        Log::info("Skidding", "Reached level 2.");
+        m_kart->set_played_custom_skid_sound_level_2(true);
     }
 
     if (level == 0 && m_graphical_remaining_jump_time <= 0.0f &&
@@ -500,6 +527,8 @@ void Skidding::update(int ticks, bool is_on_ground,
         }
     case SKID_BREAK:
         {
+            m_kart->set_played_custom_skid_sound_level_1(false);
+            m_kart->set_played_custom_skid_sound_level_2(false);
             break;
         }
     case SKID_ACCUMULATE_LEFT:
