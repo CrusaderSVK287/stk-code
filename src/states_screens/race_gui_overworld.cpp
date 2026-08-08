@@ -426,21 +426,28 @@ void RaceGUIOverworld::drawGlobalMiniMap()
                                  m_map_left+(int)(draw_at.getX()+marker_half_size),
                                  lower_y   -(int)(draw_at.getY()-marker_half_size));
 
+        // Find the direction a kart is moving in
+        btTransform trans = kart->getTrans();
+        Vec3 direction(trans.getBasis().getColumn(2));
+        // Get the rotation to rotate the icon frame
+        float rotation = atan2f(direction.getZ(),direction.getX());
         // Highlight the player icons with some background image.
         if (m_icons_frame != NULL)
         {
-            video::SColor colors[4];
-            for (unsigned int i=0;i<4;i++)
-            {
-                colors[i]=kart->getKartProperties()->getColor();
-            }
             const core::rect<s32> rect(core::position2d<s32>(0,0),
                                        m_icons_frame->getSize());
-
-            draw2DImage(m_icons_frame, position, rect, NULL, colors, true);
+            if (track->getMinimapInvert())
+            {   // correct the direction due to invert minimap for blue
+                rotation = rotation + M_PI;
+            }
+            rotation = -1.0f * rotation + 0.25f * M_PI; // icons-frame_arrow.png was rotated by 45 degrees    
+            draw2DImageRotationColor(m_icons_frame, position, rect, NULL, rotation, kart->getKartProperties()->getColor());
         }
 
-        draw2DImage(icon, position, source, NULL, NULL, true);
+        const video::SColor white(255, 255, 255, 255);
+        float rotation_icon = rotation + M_PI / 4;
+        draw2DImageRotationColor(icon, position, source, NULL, rotation_icon, white);
+
     }   // for i<getNumKarts
 
     m_current_challenge = NULL;
