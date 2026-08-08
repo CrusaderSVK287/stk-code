@@ -96,15 +96,8 @@ RaceGUIBase::RaceGUIBase()
                    "Can't find 'plungerface.png' texture, aborting.");
     }
 
-    //read frame picture for icons in the mini map.
-    if (RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_SOCCER)
-    {   // show the kart direction in soccer
-        m_icons_frame = irr_driver->getTexture("icons-frame_arrow.png");
-    }
-    else
-    {
-        m_icons_frame = irr_driver->getTexture("icons-frame.png");
-    }
+    // show the kart direction in soccer
+    m_icons_frame = irr_driver->getTexture("icons-frame_arrow.png");
     m_icons_kart_list = irr_driver->getTexture("icons-frame.png");
     if (!m_icons_frame)
     {
