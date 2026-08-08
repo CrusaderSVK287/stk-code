@@ -2642,10 +2642,14 @@ void Kart::updatePhysics(int ticks)
        !m_skidding->isJumping()                                              )
     {
         if(m_skid_sound && m_skid_sound->getStatus()!=SFXBase::SFX_PLAYING)
+        {
+            m_skid_sound->setLoop(true);
             m_skid_sound->play(getSmoothedXYZ());
+        }
     }
     else if(m_skid_sound && m_skid_sound->getStatus()==SFXBase::SFX_PLAYING)
     {
+        m_skid_sound->setSpeed(1.0f);
         m_skid_sound->stop();
     }
 

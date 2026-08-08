@@ -22,6 +22,7 @@
 #  include "graphics/show_curve.hpp"
 #endif
 #include "achievements/achievements_status.hpp"
+#include "audio/sfx_base.hpp"
 #include "config/player_manager.hpp"
 #include "karts/kart.hpp"
 #include "karts/kart_gfx.hpp"
@@ -271,6 +272,19 @@ float Skidding::updateGraphics(float dt)
 
     float bonus_time, bonus_speed, bonus_force;
     unsigned int level = getSkidBonus(&bonus_time, &bonus_speed, &bonus_force);
+
+    if (m_kart->m_skid_sound &&
+        m_kart->m_skid_sound->getStatus() == SFXBase::SFX_PLAYING)
+    {
+        float pitch = 1.0f;
+        if (level >= 2)
+            pitch = 1.25f;
+        else if (level == 1)
+            pitch = 1.15f;
+
+        m_kart->m_skid_sound->setSpeed(pitch);
+    }
+
 
     if (m_kart->m_max_speed
         ->isSpeedIncreaseActive(MaxSpeed::MS_INCREASE_SKIDDING) &&
