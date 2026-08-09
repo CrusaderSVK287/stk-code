@@ -43,6 +43,7 @@
 #include "network/protocols/game_protocol.hpp"
 #include "network/race_event_manager.hpp"
 #include "network/rewind_manager.hpp"
+#include "race/race_manager.hpp"
 #include "race/history.hpp"
 #include "states_screens/race_gui_base.hpp"
 #include "tracks/track.hpp"
@@ -172,10 +173,20 @@ void LocalPlayerController::resetInputState()
 bool LocalPlayerController::action(PlayerAction action, int value,
                                    bool dry_run)
 {
-    // Pause race doesn't need to be sent to server
+    // Pause and reset race don't need to be sent to server.
     if (action == PA_PAUSE_RACE)
     {
         PlayerController::action(action, value);
+        return true;
+    }
+    if (action == PA_RESET_RACE)
+    {
+        if (value != 0 && !NetworkConfig::get()->isNetworking() &&
+            !RaceManager::get()->isBenchmarking() &&
+            RaceManager::get()->getMajorMode() != RaceManager::MAJOR_MODE_GRAND_PRIX)
+        {
+            RaceManager::get()->rerunRace();
+        }
         return true;
     }
 

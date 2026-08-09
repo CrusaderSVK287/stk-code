@@ -6250,6 +6250,11 @@ msgid "Pause Game"
 msgstr ""
 
 #. I18N: Key binding name
+#: src/states_screens/options/options_screen_device.cpp
+msgid "Reset Race"
+msgstr ""
+
+#. I18N: Key binding name
 #: src/states_screens/options/options_screen_device.cpp:283
 msgid "Up"
 msgstr ""

@@ -134,6 +134,7 @@ void GamepadConfig::setDefaultBinds ()
     setBinding(PA_RESCUE,       Input::IT_STICKBUTTON, 3);
     setBinding(PA_LOOK_BACK,    Input::IT_STICKBUTTON, 4);
     setBinding(PA_PAUSE_RACE,   Input::IT_STICKBUTTON, 5);
+    setBinding(PA_RESET_RACE,   Input::IT_NONE, 0, Input::AD_NEUTRAL);
 
     setBinding(PA_MENU_UP,      Input::IT_STICKMOTION, 1, Input::AD_NEGATIVE);
     setBinding(PA_MENU_DOWN,    Input::IT_STICKMOTION, 1, Input::AD_POSITIVE);
@@ -573,6 +574,7 @@ fallback:
     setBinding(PA_LOOK_BACK, Input::IT_NONE, 0, Input::AD_NEUTRAL);
     setBinding(PA_RESCUE, Input::IT_NONE, 0, Input::AD_NEUTRAL);
     setBinding(PA_PAUSE_RACE, Input::IT_NONE, 0, Input::AD_NEUTRAL);
+    setBinding(PA_RESET_RACE, Input::IT_NONE, 0, Input::AD_NEUTRAL);
     setBinding(PA_MENU_SELECT, Input::IT_NONE, 0, Input::AD_NEUTRAL);
     setBinding(PA_MENU_CANCEL, Input::IT_NONE, 0, Input::AD_NEUTRAL);
 

@@ -244,6 +244,8 @@ bool PlayerController::action(PlayerAction action, int value, bool dry_run)
     case PA_PAUSE_RACE:
         if (value != 0) StateManager::get()->escapePressed();
         break;
+    case PA_RESET_RACE:
+        break;
     default:
        break;
     }

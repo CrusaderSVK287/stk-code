@@ -299,15 +299,6 @@ float Skidding::updateGraphics(float dt)
         level = 2;
     }
 
-    // Play custom sound for skid bonus idk lol
-    if (level == 1 && !m_kart->get_played_custom_skid_sound_level_1()) {
-        Log::info("Skidding", "Reached level 1.");
-        m_kart->set_played_custom_skid_sound_level_1(true);
-    }
-    if (level == 2 && !m_kart->get_played_custom_skid_sound_level_2()) {
-        Log::info("Skidding", "Reached level 2.");
-        m_kart->set_played_custom_skid_sound_level_2(true);
-    }
 
     if (level == 0 && m_graphical_remaining_jump_time <= 0.0f &&
         m_skid_state != SKID_NONE)

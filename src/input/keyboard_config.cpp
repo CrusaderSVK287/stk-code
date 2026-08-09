@@ -51,6 +51,39 @@ void KeyboardConfig::save(std::ofstream& stream)
 
 //------------------------------------------------------------------------------
 
+bool KeyboardConfig::load(const XMLNode* config)
+{
+    const bool loaded = DeviceConfig::load(config);
+
+    bool has_reset_race_binding = false;
+    for (unsigned int i = 0; i < config->getNumNodes(); i++)
+    {
+        const XMLNode* action = config->getNode(i);
+        std::string name;
+        action->get("name", &name);
+        if (name == KartActionStrings[PA_RESET_RACE])
+        {
+            has_reset_race_binding = true;
+            break;
+        }
+    }
+
+    // Profiles saved before PA_RESET_RACE used Backspace for rescue. Move
+    // precisely that legacy default to R, leaving explicitly saved new
+    // bindings unchanged.
+    const Binding& rescue_binding = getBinding(PA_RESCUE);
+    if (!has_reset_race_binding &&
+        rescue_binding.getType() == Input::IT_KEYBOARD &&
+        rescue_binding.getId() == IRR_KEY_BACK)
+    {
+        setBinding(PA_RESCUE, Input::IT_KEYBOARD, IRR_KEY_R);
+    }
+
+    return loaded;
+}   // load
+
+//------------------------------------------------------------------------------
+
 void KeyboardConfig::setDefaultBinds()
 {
     setBinding(PA_NITRO,       Input::IT_KEYBOARD, IRR_KEY_N);
@@ -59,10 +92,11 @@ void KeyboardConfig::setDefaultBinds()
     setBinding(PA_STEER_LEFT,  Input::IT_KEYBOARD, IRR_KEY_LEFT);
     setBinding(PA_STEER_RIGHT, Input::IT_KEYBOARD, IRR_KEY_RIGHT);
     setBinding(PA_DRIFT,       Input::IT_KEYBOARD, IRR_KEY_V);
-    setBinding(PA_RESCUE,      Input::IT_KEYBOARD, IRR_KEY_BACK);
+    setBinding(PA_RESCUE,      Input::IT_KEYBOARD, IRR_KEY_R);
     setBinding(PA_FIRE,        Input::IT_KEYBOARD, IRR_KEY_SPACE);
     setBinding(PA_LOOK_BACK,   Input::IT_KEYBOARD, IRR_KEY_B);
     setBinding(PA_PAUSE_RACE,  Input::IT_KEYBOARD, IRR_KEY_ESCAPE);
+    setBinding(PA_RESET_RACE,  Input::IT_KEYBOARD, IRR_KEY_BACK);
 
     setBinding(PA_MENU_UP,     Input::IT_KEYBOARD, IRR_KEY_UP);
     setBinding(PA_MENU_DOWN,   Input::IT_KEYBOARD, IRR_KEY_DOWN);

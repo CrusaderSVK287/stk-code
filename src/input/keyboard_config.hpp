@@ -41,6 +41,7 @@ public:
 
     virtual void setDefaultBinds();
     virtual void save(std::ofstream& stream);
+    virtual bool load(const XMLNode* config) OVERRIDE;
 
     // ------------------------------------------------------------------------
     virtual bool isGamePad()  const { return false; }
